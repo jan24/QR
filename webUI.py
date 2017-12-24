@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 #flask
 from flask import Flask, render_template, redirect
 from flask_socketio import SocketIO
@@ -32,6 +32,16 @@ barcode_now = {	'barcode':'456A7N009800027',
 				'time_now':'12-23 15:28',
 				'total':3064
 			   }
+
+
+
+
+
+
+
+
+
+
 
 
 

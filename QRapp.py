@@ -4,6 +4,8 @@ import re
 import sqlite3
 from flask import Flask, render_template, redirect
 
+import threading, Queue
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -54,7 +56,6 @@ class Database:
     def __del__(self):
         self.connection.close()
 
-
 def query_bar_exist(s):
     #查询条码是否已存在
     my_db = Database()
@@ -78,6 +79,13 @@ def insert_bar(s):
     except Exception as e:
         print(e)
 
+def fac_query(batchnum):
+    #根据批次查询工厂型号
+    return "DF1-153-CW0K0-AE1L0-HER2"
+
+def col_query(batchnum):
+    #根据批次查询颜色
+    return "A02"
 
 
 soundFile_dict = { 'new':os.path.dirname(os.path.realpath(__file__)) + "\\music\\railway.wav", 
@@ -89,10 +97,12 @@ def playmusic(status):
     winsound.PlaySound(soundFile_dict.get(status), winsound.SND_ASYNC)
 
 
-pattern = r'\d{3}\w\d\w{2}\d{8}$' #校对冷媒码
+pattern = r'\d{3}\w\d[A-Z]\w\d{8}$' #校对冷媒码
 
-def scan():
+
+def SCAN():
     print(" 正在监听键盘 .......")
+    print('thread :  %s is running...' % threading.current_thread().name)
     while True:
         s = str(sys.stdin.readline()).strip("\n")
         if re.match(pattern, s):
@@ -107,6 +117,8 @@ def scan():
             status='bad'
             print('plyamusic bad')
         playmusic(status)
+        print((s, status))
+
 
 barcode_now = { 'barcode':'456A7N009800027',
                 'status':'new',
@@ -117,13 +129,16 @@ barcode_now = { 'barcode':'456A7N009800027',
                 'total':3040 
                }
 
-
+t=threading.Thread(target=SCAN, name='scan loop',daemon=True)
 
 
 if __name__=="__main__":
+    print('Main thread :  %s is running...' % threading.current_thread().name)    
     
+    t.start()
     app.run()
-    scan()
+        
+    print('thread %s ended '% threading.current_thread().name)
 
 
 
