@@ -25,21 +25,32 @@ def internal_server_error(e):
 
 @app.route('/')
 def index():
-    current_bar()
-    pdict = product_dict()
-    barcode_now = { 
-                'date': get_current_time1(),
+    #查询最新的条码，以之班次为当前的班次
+    current_bar() 
+    #查询当前班次有扫码的所有批次
+    li = db_orm.batch_list(C_Bar.shift)
+    raw_count = len(li)
+    #获取当前班次所有批次的历史完成数和当班采集数，返回字典
+    count_dict = {}
+    for batch in li:
+        count_dict[batch] = (db_orm.batch_allcount(batch),)+(db_orm.batch_count(batch, C_Bar.shift),)
+
+    alldict = { 'date': get_current_time1(),
                 'line':'总 %s 车间' % C_Bar.shift[11],
                 'shift':{'1':'白班','2':'晚班','3':'中班'}[C_Bar.shift[-1]],
                 'bar':C_Bar.bar,
                 'status':{0:'旧条码',1:'新条码'}[C_Bar.isnew],
-                'batchnum':C_Bar.batchnum,
-                'fac_model':pdict.get(C_Bar.batchnum)[2],#'DF1-112-CW0K0-AE1L0-HER2'
+                'batchnum':C_Bar.batchnum, #批次号
+                'fac_model':pdict.get(C_Bar.batchnum)[2],#'DF1-112-CW0K0-AE1L0-HER2' # pdict是全局变量
                 'color':pdict.get(C_Bar.batchnum)[3],  #"B01"
                 'time_now':get_current_time2(),
-                'total':C_Bar.Shcount
+                'total':C_Bar.Shcount, #当班总采集量
+                'pdict':pdict, # index模板中的表格数据，产品信息
+                'count_dict':count_dict, #index模板中的表格数据，产量
+                'raw_count':raw_count, # 表格的行数
+                'li':li,                
                }
-    return render_template('index.html', **barcode_now)
+    return render_template('index.html', **alldict)
 
 class C_Bar:
     #保存当前条码的各个状态
@@ -74,16 +85,11 @@ class product_dict(dict):
             self[key] = db_orm.product_info_tuple(key)
             return db_orm.product_info_tuple(key)
         else:
-            return self[key]   
-
-#渲染表格
-li = db_orm.batch_list()
-raw_count = len(li)
+            return self[key]
 
 
 
-
-
+pdict = product_dict() #也可以放在index()里面， 作为全局变量时可减少对products表的访问次数
 
 
 

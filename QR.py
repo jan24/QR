@@ -20,7 +20,7 @@ def playmusic(status):
 def scan():
     #设置生产线、班次
     while True:
-        a = input('请输入生产线名，数字，如总五车间输入 5\n    ')        
+        a = input('请输入生产线名，数字，如总五车间输入 5\n    ')          
         m = re.fullmatch(r'\s*[1-9]|(1[0-2])\s*',a)
         if m:
             print('>>>>已设置为 总 %s 车间  ' % int(a.strip()) )
@@ -49,7 +49,7 @@ def scan():
     print(SHIFT)
 
     pattern = r'\d{3}\w\d\w{2}\d{8}$' #条码格式校对 形如 368 A 7N 8 198 00127、368 A 7N Y 198 00127
-    pattern = r'[a-z]\w{1,20}' #调试用
+    pattern = r'[a-z]\w{1,17}' #调试用
 
     print('>>>>开始扫码......')
     while True:

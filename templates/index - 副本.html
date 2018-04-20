@@ -8,7 +8,7 @@
 
 			table {width: 90%;border-collapse:collapse;border-spacing:0;border-left:1px solid #888;border-top:1px solid #888;background:#efefef;}  
 
-			th, td {border-right:1px solid #888;border-bottom:1px solid #888;padding:5px 15px; text-align: center;}  
+			th, td {border-right:1px solid #888;border-bottom:1px solid #888;padding:5px 15px;}  
 			th {font-weight:bold;background:#d4d4d4;} 
 			a:hover{color: #223bc5; }
 			a{ color: #0a0a0a; text-decoration: none;font-weight:bold}
@@ -42,8 +42,6 @@
 	
 		<p>时间：{{time_now}}&nbsp;&nbsp;&nbsp;&nbsp;总产量：{{total}}</p>
 		<hr />
-
-
 		<div >
 			<table border="1">
 				<tr>
@@ -64,26 +62,23 @@
 					<th>超欠数</th>	
 					<th>采集数</th>	
 				</tr>
-				{% for i in range(raw_count) %}
-
 				<tr>
-					<td>{{ i+1 }}</td>
-					<td>{{ pdict.get(li[i])[2] }}</td>
-					<td>{{ pdict.get(li[i])[3] }}</td>
-					<td>{{ li[i] }}</td>               
-					<td>{{ pdict.get(li[i])[4] }}</td> 
-					<td>{{ count_dict.get(li[i])[0] }}</td>                  
-					<td>{{ count_dict.get(li[i])[0] - pdict.get(li[i])[4] }}</td> 
-					<td>{{ count_dict.get(li[i])[1] }}</td>                    
+					<td>1</td>
+					<td></td><td></td><td></td><td></td><td></td><td></td><td></td>
 				</tr>
-				{% endfor %}	
+				<tr>
+					<td>2</td>
+					<td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+				</tr>
 		
 			</table>
 		<div/>
 	
-		<br/>
-		<br/>
-		<br/>
+		
 		
 	</body>
 </html>
