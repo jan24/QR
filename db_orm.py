@@ -67,17 +67,18 @@ def batch_allcount(batchnum):
     conn.close()   
     return values[0][0]
 
+#查询最新条码的
 def get_maxid_bar():
     conn = mysql.connector.connect(user='root', password='password', database='Qrbarcode', use_unicode=True)
     cursor = conn.cursor()
     cursor.execute('select max(id) from barcode')   
     values = cursor.fetchall()
     maxid = values[0][0]
-    cursor.execute('select * from barcode where id = %s' % (maxid,) )  #注意这种写法传字符串时容易出问题
-    values = cursor.fetchall() # 返回的是tuple,例如(96, 'g4234234634686', '423463', datetime.datetime(2018, 4, 19, 22, 4, 52), '2018-04-19-6-2'，1)
+    cursor.execute('select * from barcode where id = %s' % (maxid,) )  #注意这种写法在传字符串时容易出问题
+    values = cursor.fetchall()
     conn.close()
     if not len(values)==0:
-        return values[0] 
+        return values[0] # 返回的是tuple,例如(96, 'g4234234634686', '423463', datetime.datetime(2018, 4, 19, 22, 4, 52), '2018-04-19-6-2'，1)
 
 #查询某班次的采集的所有批次，返回批次号的列表
 def batch_list(shift):
@@ -99,3 +100,4 @@ def product_info_tuple(batchnum):
     conn.close()
     if not len(values)==0:
         return values[0]
+    return (1,'','','',1)  #方便调试，防止没查到时server崩溃

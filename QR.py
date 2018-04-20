@@ -49,7 +49,7 @@ def scan():
     print(SHIFT)
 
     pattern = r'\d{3}\w\d\w{2}\d{8}$' #条码格式校对 形如 368 A 7N 8 198 00127、368 A 7N Y 198 00127
-    pattern = r'[a-z]\d{1,15}' #调试用
+    pattern = r'[a-z]\w{1,20}' #调试用
 
     print('>>>>开始扫码......')
     while True:

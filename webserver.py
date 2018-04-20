@@ -1,10 +1,8 @@
 #coding=utf-8
-from flask import Flask
-from flask import render_template, redirect
+from flask import Flask, render_template, redirect
 from flask_script import Manager
 import db_orm
 import time, datetime
-
 
 
 app = Flask(__name__)
@@ -15,15 +13,12 @@ manager = Manager(app)
 @app.route('/readme') #静态页面
 def readme():
     return render_template('readme.html')
-
 @app.route('/linechart')
 def linechart():
     return render_template('linechart.html')
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
@@ -31,6 +26,7 @@ def internal_server_error(e):
 @app.route('/')
 def index():
     current_bar()
+    pdict = product_dict()
     barcode_now = { 
                 'date': get_current_time1(),
                 'line':'总 %s 车间' % C_Bar.shift[11],
@@ -38,12 +34,12 @@ def index():
                 'bar':C_Bar.bar,
                 'status':{0:'旧条码',1:'新条码'}[C_Bar.isnew],
                 'batchnum':C_Bar.batchnum,
-                'fac_model':'DF1-112-CW0K0-AE1L0-HER2',
-                'color':"B01",
+                'fac_model':pdict.get(C_Bar.batchnum)[2],#'DF1-112-CW0K0-AE1L0-HER2'
+                'color':pdict.get(C_Bar.batchnum)[3],  #"B01"
                 'time_now':get_current_time2(),
                 'total':C_Bar.Shcount
                }
-    return render_template('index.html',**barcode_now)
+    return render_template('index.html', **barcode_now)
 
 class C_Bar:
     #保存当前条码的各个状态
@@ -52,9 +48,7 @@ class C_Bar:
 def current_bar():
     #查询当前条码的扫码信息
     q1 = db_orm.get_maxid_bar()
-    if q1 is None:
-        return None
-    else:
+    if q1:
         C_Bar.bar = q1[1]
         C_Bar.batchnum = q1[2]
         C_Bar.tstamp = q1[3]
@@ -63,45 +57,30 @@ def current_bar():
         C_Bar.count = db_orm.batch_count(C_Bar.batchnum, C_Bar.shift)
         C_Bar.allcount = db_orm.shift_count(C_Bar.batchnum)
         C_Bar.Shcount = db_orm.shift_count(C_Bar.shift)
-    #查询当前条码的所属批次的产品信息
-'''
-    C_Bar.factory_model
-    C_Bar.color
-    C_Bar.factory_num
-
-    C_Bar.count = C_Bar.factory_num - C_Bar.allcount
-    '''
 
 def get_current_time1():
     return time.strftime('%m-%d', time.localtime(time.time()))
 def get_current_time2():
     return time.strftime('%m-%d %H:%M', time.localtime(time.time()))
-#获取当班所有的批次，以及这些批次的数据，不用每次都查数据库，故建立当前所有批次订单信息的字典{'batchnum':(id, batchnum, factory_model, color, factory_num)}
-if not current_bar() is None:
-    batch_list = db_orm.batch_list(C_Bar.shift)
-    product_dict={}
-    for b in batch_list:
-        product_dict[b] = db_orm.product_info_tuple(b)
 
-class product_list:
-    #获取当班所有的批次，保存当前所有批次订单信息，{'batchnum':(id, batchnum, factory_model, color, factory_num)}
-    #把批次设置为类的属性,属性值返回tuple
-    li = db_orm.batch_list(C_Bar.shift)
-    def __setattr__():
-        if not current_bar() is None:
-            batch_list = db_orm.batch_list(C_Bar.shift)
-            for b in batch_list:
-                product_list.__dict__[b] = db_orm.product_info_tuple(b)
-    #一次性更新
-    def update():
-        product_list.__setattr__()
+class product_dict(dict):
+    def __init__(self, **kw):
+        super().__init__(self, **kw)
+    #会逐步保存当前所有批次的订单信息，{'batchnum':(id, batchnum, factory_model, color, factory_num)}
+    #批次为类的key,value值返回tuple
     #当查询到新批次时
-    def __getattr__(batchnum):
-        product_list.__dict__[batchnum] = db_orm.product_info_tuple(batchnum)
-        return product_info_tuple(batchnum)
-    
+    def get(self, key):
+        if not key in self.keys():
+            self[key] = db_orm.product_info_tuple(key)
+            return db_orm.product_info_tuple(key)
+        else:
+            return self[key]   
 
-        
+#渲染表格
+#li = db_orm.batch_list()
+
+
+
 
 
 
