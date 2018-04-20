@@ -77,7 +77,8 @@ class product_dict(dict):
             return self[key]   
 
 #渲染表格
-#li = db_orm.batch_list()
+li = db_orm.batch_list()
+raw_count = len(li)
 
 
 
