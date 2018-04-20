@@ -26,7 +26,6 @@ sql = '''create table products (
                 factory_model char(29),
                 color char(3),
                 factory_num smallint,
-                createtime timestamp default current_timestamp,
                 UNIQUE (batchnum))'''
 cursor.execute(sql)
 conn.commit()

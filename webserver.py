@@ -1,10 +1,17 @@
 #coding=utf-8
 from flask import Flask
 from flask import render_template, redirect
+from flask_script import Manager
 import db_orm
 import time, datetime
 
+
+
 app = Flask(__name__)
+
+manager = Manager(app)
+
+
 @app.route('/readme') #静态页面
 def readme():
     return render_template('readme.html')
@@ -46,7 +53,7 @@ def current_bar():
     #查询当前条码的扫码信息
     q1 = db_orm.get_maxid_bar()
     if q1 is None:
-        pass
+        return None
     else:
         C_Bar.bar = q1[1]
         C_Bar.batchnum = q1[2]
@@ -69,11 +76,37 @@ def get_current_time1():
     return time.strftime('%m-%d', time.localtime(time.time()))
 def get_current_time2():
     return time.strftime('%m-%d %H:%M', time.localtime(time.time()))
-#批次的信息用不着每次都查数据库，故建立个当前所有批次的字典
-#batch_list = 
+#获取当班所有的批次，以及这些批次的数据，不用每次都查数据库，故建立当前所有批次订单信息的字典{'batchnum':(id, batchnum, factory_model, color, factory_num)}
+if not current_bar() is None:
+    batch_list = db_orm.batch_list(C_Bar.shift)
+    product_dict={}
+    for b in batch_list:
+        product_dict[b] = db_orm.product_info_tuple(b)
+
+class product_list:
+    #获取当班所有的批次，保存当前所有批次订单信息，{'batchnum':(id, batchnum, factory_model, color, factory_num)}
+    #把批次设置为类的属性,属性值返回tuple
+    li = db_orm.batch_list(C_Bar.shift)
+    def __setattr__():
+        if not current_bar() is None:
+            batch_list = db_orm.batch_list(C_Bar.shift)
+            for b in batch_list:
+                product_list.__dict__[b] = db_orm.product_info_tuple(b)
+    #一次性更新
+    def update():
+        product_list.__setattr__()
+    #当查询到新批次时
+    def __getattr__(batchnum):
+        product_list.__dict__[batchnum] = db_orm.product_info_tuple(batchnum)
+        return product_info_tuple(batchnum)
+    
+
+        
+
+
 
 
 
 
 if __name__ == '__main__':
-    app.run()
+    manager.run()
