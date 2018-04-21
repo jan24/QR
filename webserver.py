@@ -37,7 +37,7 @@ def index():
     for batch in li:
         count_dict[batch] = (db_orm.batch_allcount(batch),)+(db_orm.batch_count(batch, C_Bar.shift),)
 
-    alldict = { 'date': get_current_time1(),
+    alldict = { 'theshift': C_Bar.shift,
                 'line':'总 %s 车间' % C_Bar.shift[11],
                 'shift':{'1':'白班','2':'晚班','3':'中班'}[C_Bar.shift[-1]],
                 'bar':C_Bar.bar,

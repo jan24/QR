@@ -1,6 +1,6 @@
 #coding=utf-8
 import re
-import time, os, sys
+import datetime, os, sys
 import winsound #播放音乐
 import db_orm
 #主程序
@@ -20,7 +20,7 @@ def playmusic(status):
 def scan():
     #设置生产线、班次
     while True:
-        a = input('请输入生产线名，数字，如总五车间输入 5\n    ')          
+        a = input('请输入生产线名，数字，例如 总五车间输入 5\n    ')          
         m = re.fullmatch(r'\s*[1-9]|(1[0-2])\s*',a)
         if m:
             print('>>>>已设置为 总 %s 车间  ' % int(a.strip()) )
@@ -34,7 +34,7 @@ def scan():
         b = b.strip()
     else:
         print('输入无效')
-        b=time.strftime("%H:%M", time.localtime())
+        b=datetime.datetime.now().strftime('%H:%M')
         if 8 <= int(b[0:2]) <= 18: #白班 7:30——19:15
             b = '1' 
         elif b==7 and int(b[3:5])>=30:
@@ -44,9 +44,12 @@ def scan():
         else:
             b = '2' #晚班
     print('>>>>已按当前时间设置为 %s  \n' % {'1':'白班','2':'晚班','3':'中班'}[b] )
-
-    SHIFT = time.strftime("%Y-%m-%d", time.localtime()) + '-'+ a.strip() +'-'+ b #形如'2017-12-15-5-1'
-    print(SHIFT)
+    if 0 <= int(datetime.datetime.now().strftime('%H:%M')[0:2]) <=7 :
+        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)#凌晨的算前一天的班次
+        SHIFT = yesterday.strftime('%Y-%m-%d') + '-'+ a.strip() +'-'+ b
+    else:
+        SHIFT = datetime.datetime.now().strftime('%Y-%m-%d') + '-'+ a.strip() +'-'+ b #形如'2017-04-15-5-1'
+    print('Shift Now is : %s ' % SHIFT)
 
     pattern = r'\d{3}\w\d\w{2}\d{8}$' #条码格式校对 形如 368 A 7N 8 198 00127、368 A 7N Y 198 00127
     pattern = r'[a-z]\w{1,17}' #调试用
@@ -54,6 +57,8 @@ def scan():
     print('>>>>开始扫码......')
     while True:
         s = str(sys.stdin.readline()).strip("\n")
+        if s=='quit()':
+            break
         m = re.fullmatch(pattern, s)
         if m:            
             if db_orm.query_bar_isnew(s): 

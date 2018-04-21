@@ -19,6 +19,20 @@
 					bottom: 20px;
 					right:20px;					
 				} 
+			.order {  
+   				height: 60px;  
+   				line-height: 60px;  
+   				text-align: center;  
+				}  
+ 			.order .line {  
+   				display: inline-block;  
+   				width: 350px;  
+   				border-top: 1px solid #ccc ;
+				}  
+			.order .txt {  
+   				color: #686868;  
+   				vertical-align: middle;  
+				}  
 
 		</style>
 	</head>
@@ -29,17 +43,12 @@
 			<a  href="">扫码</a>
 			<a href="/linechart" target="_blank">效率曲线</a>
 			<a href="/readme" target="_blank">使用说明</a></h4>
-
 			<br/>
 			<hr />
 		</div>
 
 
-
-
-
-
-		<p>日期：{{date}} &nbsp;&nbsp;&nbsp;&nbsp;生产线：{{line}} &nbsp;&nbsp;&nbsp;&nbsp;班次：{{shift}}</p>
+		<p>班次：{{theshift}} &nbsp;&nbsp;&nbsp;&nbsp;生产线：{{line}} &nbsp;&nbsp;&nbsp;&nbsp;班次：{{shift}}</p>
 		<!--<p>开始扫码          停止扫码           退出系统</p> -->
 		<hr />
 		
@@ -50,7 +59,6 @@
 	
 		<p>时间：{{time_now}}&nbsp;&nbsp;&nbsp;&nbsp;总产量：{{total}}</p>
 		<hr />
-
 
 		<div >
 			<table border="1">
@@ -73,37 +81,35 @@
 					<th>采集数</th>	
 				</tr>
 				{% for i in range(raw_count) %}
-
-				<tr>
-					<td>{{ i+1 }}</td>
-					<td>{{ pdict.get(li[i])[2] }}</td>
-					<td>{{ pdict.get(li[i])[3] }}</td>
-					<td>{{ li[i] }}</td>               
-					<td>{{ pdict.get(li[i])[4] }}</td> 
-					<td>{{ count_dict.get(li[i])[0] }}</td>                  
-					<td>{{ count_dict.get(li[i])[0] - pdict.get(li[i])[4] }}</td> 
-					<td>{{ count_dict.get(li[i])[1] }}</td>                    
-				</tr>
-				{% endfor %}	
-		
+					<tr>
+						<td>{{ i+1 }}</td>
+						<td>{{ pdict.get(li[i])[2] }}</td>
+						<td>{{ pdict.get(li[i])[3] }}</td>
+						<td>{{ li[i] }}</td>               
+						<td>{{ pdict.get(li[i])[4] }}</td> 
+						<td>{{ count_dict.get(li[i])[0] }}</td>                  
+						<td>{{ count_dict.get(li[i])[0] - pdict.get(li[i])[4] }}</td> 
+						<td>{{ count_dict.get(li[i])[1] }}</td>                    
+					</tr>
+				{% endfor %}		
 			</table>
+			<br/>
+			<div class="order">  
+   				</span><span class="line"></span>  
+   				</span><span class="txt">到底了</span>  
+   				</span><span class="line"></span>  
+			</div>   
 
 			<div >
-
-			<a id=gotop2 href="#top">
-				<img src="{{url_for('static',filename='gotop1.png')}}" width=30px height=35.4px></img>
-			</a>
-
+				<a id=gotop2 href="#top">
+					<img src="{{url_for('static',filename='gotop1.png')}}" width=30px height=35.4px></img>
+				</a>
 			</div>
-
-
-
 
 		<div/>
 	
-		<br/>
-		<br/>
-		<br/>
+	
+	
 		
 	</body>
 </html>
