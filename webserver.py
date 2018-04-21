@@ -7,7 +7,9 @@ import time, datetime
 
 app = Flask(__name__)
 
-manager = Manager(app)
+
+
+#manager = Manager(app)
 
 
 @app.route('/readme') #静态页面
@@ -29,7 +31,7 @@ def index():
     current_bar() 
     #查询当前班次有扫码的所有批次
     li = db_orm.batch_list(C_Bar.shift)
-    raw_count = len(li)
+    raw_count = min(len(li), 30) #设置最多显示30个
     #获取当前班次所有批次的历史完成数和当班采集数，返回字典
     count_dict = {}
     for batch in li:
@@ -95,4 +97,4 @@ pdict = product_dict() #也可以放在index()里面， 作为全局变量时可
 
 
 if __name__ == '__main__':
-    manager.run()
+    app.run(host='0.0.0.0', port=80)

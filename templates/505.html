@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>QR-DETECTOR-Server Error</title>
+		<link rel="shortcut icon" href="{{url_for('static',filename='favicon.ico')}}" type="image/x-icon" />
+		<link rel="icon" href="{{url_for('static',filename='favicon.ico')}}"  type="image/x-icon" />
+		<title>QR-DETECTOR</title>
 		<meta charset="utf-8">
 		<style type="text/css">
-			body {background-image: url(./img/body-bg.png);padding-left:30px;} 
+			body {background-image: url(../static/body-bg.png);padding-left:30px;} 
+
+			table {width: 90%;border-collapse:collapse;border-spacing:0;border-left:1px solid #888;border-top:1px solid #888;background:#efefef;}  
+
+			th, td {border-right:1px solid #888;border-bottom:1px solid #888;padding:5px 15px; text-align: center;}  
+			th {font-weight:bold;background:#d4d4d4;} 
 			a:hover{color: #223bc5; }
-			a{ color: #0a0a0a; text-decoration: none;font-weight:bold}			 
+			a{ color: #0a0a0a; text-decoration: none;font-weight:bold}
+
 		</style>
 	</head>
 	<body>
@@ -14,7 +22,7 @@
 		<div>
 			<a href="./" target="_blank">扫码</a>
 			<a href="./linechart" target="_blank">效率曲线</a>
-			<a href="">使用说明</a>
+			<a href="./readme">使用说明</a>
 			<hr />
 		</div>
 

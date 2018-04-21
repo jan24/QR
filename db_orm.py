@@ -100,4 +100,4 @@ def product_info_tuple(batchnum):
     conn.close()
     if not len(values)==0:
         return values[0]
-    return (1,'','','',1)  #方便调试，防止没查到时server崩溃
+    return (1,'None','None','None',1)  #方便调试，防止没查到时server崩溃

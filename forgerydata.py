@@ -64,7 +64,7 @@ for x in range(50, 61):
     conn = mysql.connector.connect(user='root', password='password', database='Qrbarcode', use_unicode=True)
     cursor = conn.cursor()
     for i in range(random.randint(50, 150)):
-        time.sleep(0.5)
+        time.sleep(0.1)
         cursor.execute(sql,[a_bar(x), a_bar(x)[4:10], shift]) #批次号为条码的部分，368A 7N8198 00127
         conn.commit()
     conn.close()
