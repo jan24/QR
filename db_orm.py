@@ -2,6 +2,7 @@
 #MySQL驱动 mysql-connector-python
 #封装读写语句
 import mysql.connector
+import mysql.connector.pooling
 #检查表是否存在
 try:
     conn = mysql.connector.connect(user='root', password='password', database='Qrbarcode', use_unicode=True)
@@ -14,6 +15,7 @@ except Exception:
     print('无法连接上数据库 ')
 print('>>>数据库连接测试正常 ')
 
+#建立连接池
 
 #插入一行记录
 def insert(bar, shift, isnew=1):
